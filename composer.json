@@ -1,7 +1,7 @@
 {
   "name": "drmvc/session",
   "type": "library",
-  "description": "For work with ssesions",
+  "description": "Module for working with PHP sessions",
   "homepage": "https://drmvc.com/",
   "license": "MIT",
   "keywords": [

@@ -12,15 +12,9 @@ interface SessionInterface
     public function setPrefix(string $prefix): SessionInterface;
 
     /**
-     * @return  mixed
+     * @return  string|null
      */
-    public function getPrefix(): string;
-
-    /**
-     * @param   bool $instance
-     * @return  SessionInterface
-     */
-    public function setStarted(bool $instance): SessionInterface;
+    public function getPrefix();
 
     /**
      * @return  bool
@@ -30,9 +24,9 @@ interface SessionInterface
     /**
      * if session has not started, start sessions
      *
-     * @return  SessionInterface
+     * @return  string
      */
-    public function init(): SessionInterface;
+    public function init(): string;
 
     /**
      * Add value to a session.
@@ -56,10 +50,9 @@ interface SessionInterface
      * Get item from session
      *
      * @param  string $name item to look for in session
-     * @param  boolean $secondKey if used then use as a second key
      * @return mixed
      */
-    public function get($name, $secondKey = false);
+    public function get(string $name);
 
     /**
      * Return session id
