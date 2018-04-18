@@ -79,8 +79,7 @@ interface SessionInterface
      * Empties and destroys the session.
      *
      * @param   string $key - session name to destroy
-     * @param   boolean $prefix - if set to true clear all sessions for current SESSION_PREFIX
      */
-    public function destroy($key = '', $prefix = false);
+    public function destroy($key = null);
 
 }

@@ -25,11 +25,14 @@ class Session implements SessionInterface
     }
 
     /**
+     * Generate prefix with key, or return only prefix
+     *
+     * @param   string|null $key
      * @return  string|null
      */
-    public function getPrefix()
+    public function getPrefix(string $key = null)
     {
-        return $this->_prefix;
+        return (null !== $key) ? $this->_prefix . $key : $this->_prefix;
     }
 
     /**
@@ -74,10 +77,10 @@ class Session implements SessionInterface
     {
         if (\is_array($name) && false === $value) {
             foreach ($name as $key => $val) {
-                $_SESSION[$this->getPrefix() . $key] = $val;
+                $_SESSION[$this->getPrefix($key)] = $val;
             }
         } else {
-            $_SESSION[$this->getPrefix() . $name] = $value;
+            $_SESSION[$this->getPrefix($name)] = $value;
         }
 
         return $this;
@@ -92,14 +95,13 @@ class Session implements SessionInterface
      */
     public function pull(string $name): string
     {
-        $key = $this->getPrefix() . $name;
+        $name = $this->getPrefix($name);
 
-        if (isset($_SESSION[$key])) {
-            $value = $_SESSION[$key];
-            unset($_SESSION[$key]);
+        if (isset($_SESSION[$name])) {
+            $value = $_SESSION[$name];
+            unset($_SESSION[$name]);
             return $value;
         }
-
         return false;
     }
 
@@ -147,44 +149,22 @@ class Session implements SessionInterface
     }
 
     /**
-     * Clean all keys stored in session array
-     *
-     * @param   string|null $prefix
-     * @return  SessionInterface
-     */
-    private function cleanUp(string $prefix = null): SessionInterface
-    {
-        if (null === $prefix) {
-            session_unset();
-            session_destroy();
-        } else {
-            foreach ($_SESSION as $key => $value) {
-                if (strpos($key, $prefix) === 0) {
-                    unset($_SESSION[$key]);
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Remove some single key, remove keys by prefix or destroy session
      *
      * @param   string $name session name to destroy
-     * @param   boolean $byPrefix if set to true clear all sessions for current prefix of session
      * @return  SessionInterface
      */
-    public function destroy($name = '', $byPrefix = false): SessionInterface
+    public function destroy($name = null): SessionInterface
     {
-        $prefix = $this->getPrefix();
+        $name = $this->getPrefix($name) ?? null;
 
-        if ('' === $name) {
+        if (null === $name) {
             // Clean up if key name is not provided
-            $this->cleanUp($prefix);
+            session_unset();
+            session_destroy();
         } else {
             // Or just remove single key
-            unset($_SESSION[$prefix . $name]);
+            unset($_SESSION[$name]);
         }
 
         return $this;
